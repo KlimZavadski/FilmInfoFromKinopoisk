@@ -26,7 +26,7 @@ namespace GetFilmInfoFromKinopoisk
         private readonly String FilmYear = ConfigurationManager.AppSettings["FilmYear"];
 
         private readonly String[] filmNames = ConfigurationManager.AppSettings["FilmList"]
-            .Split(new String[] {", "}, StringSplitOptions.RemoveEmptyEntries);
+            .Split(new String[] {"; "}, StringSplitOptions.RemoveEmptyEntries);
 
         #endregion
 
@@ -109,9 +109,12 @@ namespace GetFilmInfoFromKinopoisk
         private String ToUsualView(IEnumerable<Film> films)
         {
             StringBuilder builder = new StringBuilder();
+            DateTime emptyDate = new DateTime();
             foreach (var film in films)
             {
-                builder.Append(film.Name + ";" + film.DatePremierWorld.ToString("dd MMMM yyyy") + ";" + film.DateDVD.ToString("dd MMMM yyyy") + Environment.NewLine);
+                builder.Append(film.Name + ";" +
+                    (film.DatePremierWorld == emptyDate ? "-" : film.DatePremierWorld.ToString("dd MMMM yyyy")) + ";" +
+                    (film.DateDVD == emptyDate ? "-" : film.DateDVD.ToString("dd MMMM yyyy")) + Environment.NewLine);
             }
             return builder.ToString();
         }
